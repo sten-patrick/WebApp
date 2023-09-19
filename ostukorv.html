@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ostukorv</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Koduleht</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="sünniaeg.html">Sünniaeg</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="ostukorv.html">Ostukorv<span class="sr-only">(praegune)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="nimed.html">Nimed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kaugushüppe.html">Kaugushüppe</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Ostukorv</h1>
+        <div class="row">
+            <div class="col-md-6">
+                <h2>Lisa toode</h2>
+                <form id="lisatoote-vorm">
+                    <div class="mb-3">
+                        <label for="nimi" class="form-label">Nimi</label>
+                        <input type="text" class="form-control" id="nimi" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="hind" class="form-label">Hind (EUR)</label>
+                        <input type="number" class="form-control" id="hind" step="0.01" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="kogus" class="form-label">Kogus</label>
+                        <input type="number" class="form-control" id="kogus" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lisa toode</button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <h2>Ostukorvi sisu</h2>
+                <ul id="ostukorvi-sisu" class="list-group"></ul>
+                <h3>Kogu summa: <span id="kogu-summa">0 EUR</span></h3>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        const ostukorv = {
+            tooted: [],
+
+            kuvaSisu: function () {
+                const ostukorviSisu = document.getElementById('ostukorvi-sisu');
+                ostukorviSisu.innerHTML = '';
+
+                this.tooted.forEach((toode, indeks) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'list-group-item';
+                    listItem.innerHTML = `${toode.nimi} - ${toode.hind} EUR - Kogus: ${toode.kogus} 
+                        <button class="btn btn-danger btn-sm float-end" onclick="eemaldaToode(${indeks})">Eemalda</button>`;
+                    ostukorviSisu.appendChild(listItem);
+                });
+
+                const koguSumma = this.koguSumma();
+                document.getElementById('kogu-summa').textContent = `${koguSumma.toFixed(2)} EUR`;
+            },
+
+            lisaToode: function (nimi, hind, kogus) {
+                this.tooted.push({ nimi, hind, kogus });
+                this.kuvaSisu();
+            },
+
+            eemaldaToode: function (indeks) {
+                this.tooted.splice(indeks, 1);
+                this.kuvaSisu();
+            },
+
+            koguSumma: function () {
+                let summa = 0;
+                this.tooted.forEach((toode) => {
+                    summa += toode.hind * toode.kogus;
+                });
+                return summa;
+            },
+        };
+
+        const lisatooteVorm = document.getElementById('lisatoote-vorm');
+        lisatooteVorm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const nimi = document.getElementById('nimi').value;
+            const hind = parseFloat(document.getElementById('hind').value);
+            const kogus = parseInt(document.getElementById('kogus').value);
+            ostukorv.lisaToode(nimi, hind, kogus);
+            lisatooteVorm.reset();
+        });
+
+        function eemaldaToode(indeks) {
+            ostukorv.eemaldaToode(indeks);
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inimeste Andmed</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">Koduleht</a>
+                    </li>
+                    <li class="nav-item active">
+                        <a class="nav-link" href="sünniaeg.html">Sünniaeg<span class="sr-only">(praegune)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ostukorv.html">Ostukorv</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="nimed.html">Nimed</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kaugushüppe.html">Kaugushüppe</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <h1>Inimeste Andmed</h1>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Nimi</th>
+                    <th>Isikukood</th>
+                    <th>Sünniaeg</th>
+                    <th>Vanus</th>
+                </tr>
+            </thead>
+            <tbody id="inimeste-andmed-tabel">
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+        const inimesteAndmed = [
+            { nimi: "Mari Maasikas", isikukood: "38705123568" },
+            { nimi: "Jaan Jõesaar", isikukood: "49811234567" },
+            { nimi: "Kristiina Kukk", isikukood: "39203029876" },
+            { nimi: "Margus Mustikas", isikukood: "49807010346" },
+            { nimi: "Jaak Järve", isikukood: "39504234985" },
+            { nimi: "Kadi Kask", isikukood: "39811136789" },
+        ];
+
+        inimesteAndmed.forEach((inimene) => {
+            const isikukood = inimene.isikukood;
+            const sünniaeg = new Date(
+                "19" + isikukood.slice(1, 3), 
+                parseInt(isikukood.slice(3, 5)) - 1, 
+                isikukood.slice(5, 7)
+            );
+            const täna = new Date();
+            const vanus = täna.getFullYear() - sünniaeg.getFullYear();
+
+            inimene.sünniaeg = sünniaeg.toDateString();
+            inimene.vanus = vanus;
+        });
+
+        const inimesteAndmedTabel = document.getElementById("inimeste-andmed-tabel");
+
+        inimesteAndmed.forEach((inimene) => {
+            const newRow = inimesteAndmedTabel.insertRow();
+            newRow.innerHTML = `
+                <td>${inimene.nimi}</td>
+                <td>${inimene.isikukood}</td>
+                <td>${inimene.sünniaeg}</td>
+                <td>${inimene.vanus}</td>
+            `;
+        });
+    </script>
+</body>
+</html>
